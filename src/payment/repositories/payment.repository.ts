@@ -95,18 +95,7 @@ export class PaymentRepository {
     sortOrder: 'asc' | 'desc' = 'desc',
   ): Promise<{ data: PaymentEntity[]; total: number }> {
     const allPayments = Array.from(this.payments.values());
-
-    // Sort payments
-    const sortedPayments = allPayments.sort((a, b) => {
-      const aValue = this.getSortValue(a, sortBy);
-      const bValue = this.getSortValue(b, sortBy);
-
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
+    const sortedPayments = this.sortPayments(allPayments, sortBy, sortOrder);
 
     return this.paginateResults(sortedPayments, page, limit);
   }
@@ -128,17 +117,7 @@ export class PaymentRepository {
       (payment) => payment.customerId === customerId,
     );
 
-    // Sort payments
-    const sortedPayments = customerPayments.sort((a, b) => {
-      const aValue = this.getSortValue(a, sortBy);
-      const bValue = this.getSortValue(b, sortBy);
-
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
+    const sortedPayments = this.sortPayments(customerPayments, sortBy, sortOrder);
 
     return this.paginateResults(sortedPayments, page, limit);
   }
@@ -167,17 +146,7 @@ export class PaymentRepository {
       (payment) => payment.status === status,
     );
 
-    // Sort payments
-    const sortedPayments = statusPayments.sort((a, b) => {
-      const aValue = this.getSortValue(a, sortBy);
-      const bValue = this.getSortValue(b, sortBy);
-
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
+    const sortedPayments = this.sortPayments(statusPayments, sortBy, sortOrder);
 
     return this.paginateResults(sortedPayments, page, limit);
   }
@@ -197,6 +166,23 @@ export class PaymentRepository {
     const data = payments.slice(startIndex, endIndex);
 
     return { data, total };
+  }
+
+  private sortPayments(
+    payments: PaymentEntity[],
+    sortBy: string,
+    sortOrder: 'asc' | 'desc',
+  ): PaymentEntity[] {
+    return payments.sort((a, b) => {
+      const aValue = this.getSortValue(a, sortBy);
+      const bValue = this.getSortValue(b, sortBy);
+
+      if (sortOrder === 'asc') {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
   }
 
   private getSortValue(payment: PaymentEntity, sortBy: string): any {
