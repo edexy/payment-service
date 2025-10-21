@@ -88,7 +88,7 @@ DATA_DIR=./data
 API_KEYS=your-secret-api-key-1,your-secret-api-key-2,dev-api-key-123
 ```
 
-> **⚠️ Important**: The `API_KEYS` environment variable is required for the service to function. Without it, all payment endpoints will return 401 Unauthorized errors.
+> **⚠️ Important**: The `API_KEYS` environment variable is required for the service to function. Without it, all payment endpoints will return 401 Unauthorized errors. One the API Key set in the .env file should be used to authenticate in swagger or passed as value in the `X-API-Key` header key.
 
 ### 4. Run the Application
 
