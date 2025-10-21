@@ -11,7 +11,7 @@ export class PublicGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    
+
     return isPublic;
   }
 }

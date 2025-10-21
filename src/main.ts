@@ -31,7 +31,6 @@ async function bootstrap() {
     .setTitle('Payment Processing API')
     .setDescription('A microservice for payment processing simulation')
     .setVersion('1.0')
-    .addTag('payments')
     .addApiKey(
       {
         type: 'apiKey',

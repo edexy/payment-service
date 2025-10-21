@@ -63,6 +63,9 @@ export class ApiKeyGuard implements CanActivate {
       return [];
     }
 
-    return apiKeys.split(',').map(key => key.trim()).filter(key => key.length > 0);
+    return apiKeys
+      .split(',')
+      .map((key) => key.trim())
+      .filter((key) => key.length > 0);
   }
 }
