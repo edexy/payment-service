@@ -108,13 +108,7 @@ export class PaymentRepository {
       }
     });
 
-    // Calculate pagination
-    const total = sortedPayments.length;
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const data = sortedPayments.slice(startIndex, endIndex);
-
-    return { data, total };
+    return this.paginateResults(sortedPayments, page, limit);
   }
 
   async findByCustomerId(customerId: string): Promise<PaymentEntity[]> {
@@ -146,13 +140,7 @@ export class PaymentRepository {
       }
     });
 
-    // Calculate pagination
-    const total = sortedPayments.length;
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const data = sortedPayments.slice(startIndex, endIndex);
-
-    return { data, total };
+    return this.paginateResults(sortedPayments, page, limit);
   }
 
   async update(payment: PaymentEntity): Promise<PaymentEntity> {
@@ -160,15 +148,6 @@ export class PaymentRepository {
     await this.saveToFile();
     this.logger.log(`Updated payment with ID: ${payment.id}`);
     return payment;
-  }
-
-  async delete(id: string): Promise<boolean> {
-    const deleted = this.payments.delete(id);
-    if (deleted) {
-      await this.saveToFile();
-      this.logger.log(`Deleted payment with ID: ${id}`);
-    }
-    return deleted;
   }
 
   async findByStatus(status: string): Promise<PaymentEntity[]> {
@@ -200,17 +179,24 @@ export class PaymentRepository {
       }
     });
 
-    // Calculate pagination
-    const total = sortedPayments.length;
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const data = sortedPayments.slice(startIndex, endIndex);
-
-    return { data, total };
+    return this.paginateResults(sortedPayments, page, limit);
   }
 
   async count(): Promise<number> {
     return this.payments.size;
+  }
+
+  private paginateResults(
+    payments: PaymentEntity[],
+    page: number,
+    limit: number,
+  ): { data: PaymentEntity[]; total: number } {
+    const total = payments.length;
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const data = payments.slice(startIndex, endIndex);
+
+    return { data, total };
   }
 
   private getSortValue(payment: PaymentEntity, sortBy: string): any {
